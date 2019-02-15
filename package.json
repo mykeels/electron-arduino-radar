@@ -1,0 +1,19 @@
+{
+  "name": "radar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^4.0.5",
+    "johnny-five": "^1.0.0"
+  },
+  "devDependencies": {
+    "electron-reload": "^1.4.0"
+  }
+}

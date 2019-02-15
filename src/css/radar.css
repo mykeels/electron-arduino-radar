@@ -1,0 +1,96 @@
+:root{
+    --size: 550px;
+    --n-size: calc(--size * -1);
+}
+
+body{
+  background-color: #000;
+  margin: 0;
+}
+
+.radar {
+  background: none;
+  width: var(--size);
+  height: var(--size);
+  position: relative;
+  background-size: var(--size) var(--size);
+  position: absolute;
+  left: calc(50% - var(--size) / 2);
+  top: calc(50% - var(--size) / 2);
+  margin-left: var(--n-size) / 2;
+  margin-top: var(--n-size) / 2;
+}
+
+.radar:hover {
+  background: none;
+}
+
+.radar .pointer {
+  position: absolute;
+  z-index: 1024;
+  left: 10.5820106%;
+  right: 10.5820106%;
+  top: 10.5820106%;
+  bottom: 50%;
+  transform: rotate(180deg) scaleX(-1);
+  will-change: transform;
+  transform-origin: 50% 100%;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background-image: linear-gradient(135deg, 
+    rgba(5, 162, 185, 0.8) 0%, 
+    rgba(0, 0, 0, 0.02) 70%,
+    rgba(0, 0, 0, 0) 100%
+    );
+  clip-path: polygon(100% 0, 
+    -40% 0%, /*控制扇形角度 100% => 135deg*/
+    50% 100%, 0 100%, 0 0);
+  
+  animation: rotate360 3s infinite linear;
+}
+
+.radar .pointer:after {
+  content: "";
+  position: absolute;
+  width: 50%;
+  bottom: -1px;
+  border-top: 2px solid rgba(0, 231, 244, 0.8);
+  box-shadow: 0 0 3px rgba(0, 231, 244, 0.6);
+  border-radius: 9px;
+}
+
+.shadow {
+  position: absolute;
+  left: 11%;
+  top: 11%;
+  right: 11%;
+  bottom: 11%;
+  margin: auto;
+  border-radius: 9999px;
+  box-shadow: 0 0 66px 6px #A51414;
+  animation: shadow 1s infinite ease;
+}
+
+
+@keyframes rotate360 {
+  0% {
+    transform: rotate(180deg) scaleX(-1);
+  }
+  50% {
+    transform: rotate(360deg) scaleX(-1);
+  }
+  to {
+    transform: rotate(180deg) scaleX(-1);
+  }
+}
+
+@keyframes shadow {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
