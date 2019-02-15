@@ -11,6 +11,39 @@
     <div class="radar">
         <div class="pointer"></div>
         <div class="shadow"></div>
-      </div>
+    </div>
+    <script>
+        async function sleep(ms) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve()
+                }, ms)
+            })
+        }
+
+        async function rotateRight() {
+            for(let degree = 180; degree <= 360; degree++) {
+                const elem = document.querySelector('div.radar')
+                elem.style.transform = `rotate(${degree}deg) scaleX(-1)`
+                await sleep(20)
+            }
+        }
+
+        async function rotateLeft() {
+            for(let degree = 360; degree >= 180; degree--) {
+                const elem = document.querySelector('div.radar')
+                elem.style.transform = `rotate(${degree}deg) scaleX(-1)`
+                await sleep(20)
+            }
+        }
+
+        (async () => {
+            while (true) {
+                await rotateRight()
+
+                await rotateLeft()
+            }
+        })()
+    </script>
 </body>
 </html>

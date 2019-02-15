@@ -45,7 +45,7 @@ body{
     -40% 0%, /*控制扇形角度 100% => 135deg*/
     50% 100%, 0 100%, 0 0);
   
-  animation: rotate360 3s infinite linear;
+  /* animation: rotate360 3s infinite linear; */
 }
 
 .radar .pointer:after {
