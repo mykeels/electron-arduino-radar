@@ -1,0 +1,20 @@
+:root{
+    --obstacle-size: 7px;
+    --bgcolor: orange;
+    --center-x: calc(50% - (var(--obstacle-size) / 2));
+    --center-y: calc(50% - (var(--obstacle-size) / 2));
+}
+
+span.obstacle, span.sonar {
+    width: var(--obstacle-size);
+    height: var(--obstacle-size);
+    position: absolute;
+    background-color: var(--bgcolor);
+    display: inline-block;
+}
+
+span.sonar {
+    background-color: greenyellow;
+    top: var(--center-x);
+    left: var(--center-y);
+}

@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="./css/radar.css">
+    <link rel="stylesheet" href="./css/obstacle.css">
     <title>Radar</title>
 </head>
 <body>
     <div class="radar">
         <div class="pointer"></div>
         <div class="shadow"></div>
+        <span class="sonar"></span>
     </div>
     <script>
         async function sleep(ms) {
@@ -23,22 +25,49 @@
 
         async function rotateRight() {
             for(let degree = 180; degree <= 360; degree++) {
-                const elem = document.querySelector('div.radar')
+                const elem = document.querySelector('div.pointer')
                 elem.style.transform = `rotate(${degree}deg) scaleX(-1)`
                 await sleep(20)
+
+                if (Math.random() < 0.1) {
+                    spawnObstacle(degree, Math.ceil(Math.random() * 225))
+                }
             }
         }
 
         async function rotateLeft() {
-            for(let degree = 360; degree >= 180; degree--) {
-                const elem = document.querySelector('div.radar')
-                elem.style.transform = `rotate(${degree}deg) scaleX(-1)`
+            for(let degree = 180; degree >= 0; degree--) {
+                const elem = document.querySelector('div.pointer')
+                elem.style.transform = `rotate(${degree}deg) scaleX(1)`
                 await sleep(20)
+
+                if (Math.random() < 0.1) {
+                    spawnObstacle(degree + 180, Math.ceil(Math.random() * 200))
+                }
             }
+        }
+
+        async function spawnObstacle(angle = 0, distance = 0) {
+            console.log('spawnObstacle')
+            const elem = document.createElement('span')
+            elem.className = 'obstacle'
+
+            angle *= Math.PI / 180
+            const [ left, top ] = [ distance * Math.cos(angle), distance * Math.sin(angle) ]
+
+            elem.style.top = `calc(var(--center-y) + ${top}px)`
+            elem.style.left = `calc(var(--center-x) + ${left}px)`
+
+            const radarElem = document.querySelector('div.radar')
+            radarElem.appendChild(elem)
+
+            await sleep(300)
+            elem.remove()
         }
 
         (async () => {
             while (true) {
+
                 await rotateRight()
 
                 await rotateLeft()
