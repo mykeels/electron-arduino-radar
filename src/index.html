@@ -15,6 +15,53 @@
         <span class="sonar"></span>
     </div>
     <script>
+        const { remote } = require('electron')
+
+        const { Board, Servo } = remote.require('johnny-five')
+
+        function connectToBoard() {
+            const board = new Board()
+
+            board.on('ready', function () {
+                console.log('board is ready')
+
+                console.log({
+                    board
+                });
+            })
+
+            return sleep(3000).then(() => {
+                if (board.isConnected) return board
+                else return connectToBoard()
+            })
+        }
+
+        connectToBoard().then(board => {
+            console.log('before:servo')
+            const servo = new Servo({
+                pin: 8,
+                board
+            });
+
+            (async () => {
+                console.log('before:sleep')
+                await sleep(1000)
+                console.log('after:sleep')
+                while (true) {
+
+                    await rotateRight(angle => {
+                        console.log('set:angle', angle)
+                        servo.to(angle)
+                    }, 200)
+
+                    await rotateLeft(angle => {
+                        console.log('set:angle', angle)
+                        servo.to(angle)
+                    }, 200)
+                }
+            })();
+        }).catch(err => console.error(err))
+        
         async function sleep(ms) {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
@@ -23,27 +70,31 @@
             })
         }
 
-        async function rotateRight() {
-            for(let degree = 180; degree <= 360; degree++) {
+        async function rotateRight(fn = (angle) => ({}), interval = 500) {
+            for(let angle = 180; angle <= 360; angle += 10) {
                 const elem = document.querySelector('div.pointer')
-                elem.style.transform = `rotate(${degree}deg) scaleX(-1)`
-                await sleep(20)
+                elem.style.transform = `rotate(${angle}deg) scaleX(-1)`
+                await sleep(interval)
 
                 if (Math.random() < 0.1) {
-                    spawnObstacle(degree, Math.ceil(Math.random() * 225))
+                    spawnObstacle(angle, Math.ceil(Math.random() * 225))
                 }
+
+                if (typeof (fn) === 'function') fn(angle - 180)
             }
         }
 
-        async function rotateLeft() {
-            for(let degree = 180; degree >= 0; degree--) {
+        async function rotateLeft(fn = (angle) => ({}), interval = 500) {
+            for(let angle = 180; angle >= 0; angle -= 10) {
                 const elem = document.querySelector('div.pointer')
-                elem.style.transform = `rotate(${degree}deg) scaleX(1)`
-                await sleep(20)
+                elem.style.transform = `rotate(${angle}deg) scaleX(1)`
+                await sleep(interval)
 
                 if (Math.random() < 0.1) {
-                    spawnObstacle(degree + 180, Math.ceil(Math.random() * 200))
+                    spawnObstacle(angle + 180, Math.ceil(Math.random() * 200))
                 }
+
+                if (typeof (fn) === 'function') fn(angle)
             }
         }
 
@@ -64,15 +115,6 @@
             await sleep(300)
             elem.remove()
         }
-
-        (async () => {
-            while (true) {
-
-                await rotateRight()
-
-                await rotateLeft()
-            }
-        })()
     </script>
 </body>
 </html>
