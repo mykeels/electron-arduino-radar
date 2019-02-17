@@ -38,3 +38,7 @@ The only difference is that the sonar is attached to the top of the servo.
 - Run `npm start`
 
 Enjoy!
+
+## References
+
+The CSS for this is from [this codepen](https://codepen.io/yisi/pen/LVMmQy).
