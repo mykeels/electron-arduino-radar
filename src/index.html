@@ -17,7 +17,12 @@
     <script>
         const { remote } = require('electron')
 
-        const { Board, Servo } = remote.require('johnny-five')
+        const { Board, Servo, Pin, Proximity } = remote.require('johnny-five')
+
+        const SONAR_PIN = 2
+        const SERVO_PIN = 8
+        const RADAR_SIZE = 550
+        const RADAR_STEP_DELAY = 200
 
         function connectToBoard() {
             const board = new Board()
@@ -26,11 +31,12 @@
                 console.log('board is ready')
 
                 console.log({
-                    board
+                    board,
+                    Pin
                 });
             })
 
-            return sleep(3000).then(() => {
+            return sleep(5000).then(() => {
                 if (board.isConnected) return board
                 else return connectToBoard()
             })
@@ -39,7 +45,7 @@
         connectToBoard().then(board => {
             console.log('before:servo')
             const servo = new Servo({
-                pin: 8,
+                pin: SERVO_PIN,
                 board
             });
 
@@ -47,17 +53,25 @@
                 console.log('before:sleep')
                 await sleep(1000)
                 console.log('after:sleep')
+                        
+                const proximity = new Proximity({
+                    pin: SONAR_PIN,
+                    controller: 'HC-SR04'
+                })
+
                 while (true) {
 
                     await rotateRight(angle => {
-                        console.log('set:angle', angle)
                         servo.to(angle)
-                    }, 200)
+
+                        spawnObstacle(angle - 180, ((proximity.cm / 396.24) * RADAR_SIZE / 2))
+                    }, RADAR_STEP_DELAY)
 
                     await rotateLeft(angle => {
-                        console.log('set:angle', angle)
                         servo.to(angle)
-                    }, 200)
+
+                        spawnObstacle(angle + 180, ((proximity.cm / 396.24) * RADAR_SIZE / 2))
+                    }, RADAR_STEP_DELAY)
                 }
             })();
         }).catch(err => console.error(err))
@@ -76,10 +90,6 @@
                 elem.style.transform = `rotate(${angle}deg) scaleX(-1)`
                 await sleep(interval)
 
-                if (Math.random() < 0.1) {
-                    spawnObstacle(angle, Math.ceil(Math.random() * 225))
-                }
-
                 if (typeof (fn) === 'function') fn(angle - 180)
             }
         }
@@ -89,10 +99,6 @@
                 const elem = document.querySelector('div.pointer')
                 elem.style.transform = `rotate(${angle}deg) scaleX(1)`
                 await sleep(interval)
-
-                if (Math.random() < 0.1) {
-                    spawnObstacle(angle + 180, Math.ceil(Math.random() * 200))
-                }
 
                 if (typeof (fn) === 'function') fn(angle)
             }
@@ -112,7 +118,7 @@
             const radarElem = document.querySelector('div.radar')
             radarElem.appendChild(elem)
 
-            await sleep(300)
+            await sleep(RADAR_STEP_DELAY * 3)
             elem.remove()
         }
     </script>

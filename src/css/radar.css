@@ -9,7 +9,7 @@ body{
 }
 
 .radar {
-  background: none;
+  background: url(https://gtms03.alicdn.com/tps/i3/TB1Vet9IVXXXXbuapXXb2YSIVXX-567-567.png) no-repeat 50% 50%;
   width: var(--size);
   height: var(--size);
   position: relative;
@@ -19,10 +19,6 @@ body{
   top: calc(50% - var(--size) / 2);
   margin-left: var(--n-size) / 2;
   margin-top: var(--n-size) / 2;
-}
-
-.radar:hover {
-  background: none;
 }
 
 .radar .pointer {

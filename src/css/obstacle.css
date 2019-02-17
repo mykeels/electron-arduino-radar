@@ -1,6 +1,6 @@
 :root{
-    --obstacle-size: 7px;
-    --bgcolor: orange;
+    --obstacle-size: 20px;
+    --bgcolor: yellow;
     --center-x: calc(50% - (var(--obstacle-size) / 2));
     --center-y: calc(50% - (var(--obstacle-size) / 2));
 }
@@ -11,6 +11,7 @@ span.obstacle, span.sonar {
     position: absolute;
     background-color: var(--bgcolor);
     display: inline-block;
+    border-radius: 50%;
 }
 
 span.sonar {
